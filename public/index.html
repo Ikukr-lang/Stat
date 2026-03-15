@@ -11,133 +11,180 @@
         :root { --gold: #d4af37; }
         .tail-container { font-family: 'Inter', system-ui, sans-serif; }
         .hero-bg {
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-            background-image: url('https://picsum.photos/id/1015/2000/1200');
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%), url('https://picsum.photos/id/1015/2000/1200');
             background-size: cover;
             background-position: center;
             position: relative;
         }
-        .hero-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(10,10,10,0.95)); }
-        .gold-text { color: #d4af37; }
-        .card-hover { transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .card-hover:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 25px 50px -12px rgb(212 175 55 / 0.3); }
+        .hero-bg::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(10,10,10,0.98)); }
+        .gold-text { color: var(--gold); }
+        .card-hover { transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+        .card-hover:hover { transform: translateY(-15px) scale(1.03); box-shadow: 0 25px 50px -12px rgb(212 175 55 / 0.35); }
+        .modal { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="tail-container bg-zinc-950 text-white">
-    <!-- NAVBAR -->
-    <nav class="bg-black border-b border-amber-900 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center text-black font-bold text-2xl">⚽</div>
-                <div><span class="text-3xl font-bold tracking-tighter">Join</span><span class="text-3xl font-bold tracking-tighter gold-text">Gold</span><span class="text-3xl font-bold tracking-tighter">.Football</span></div>
-            </div>
-            <div class="flex items-center gap-4">
-                <button onclick="showCodeLoginModal()" class="flex items-center gap-3 bg-gradient-to-r from-amber-400 to-yellow-600 text-black font-bold text-xl px-10 py-6 rounded-3xl hover:scale-105">
-                    <i class="fa-solid fa-key"></i> Войти через Telegram по коду
-                </button>
-                <button onclick="showVIPPrompt()" class="w-8 h-8 flex items-center justify-center text-amber-400 text-2xl">👑</button>
+<body class="tail-container bg-zinc-950 text-white overflow-x-hidden">
+
+<!-- NAVBAR -->
+<nav class="bg-black border-b border-amber-900 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-yellow-600 rounded-full flex items-center justify-center text-black font-bold text-2xl">⚽</div>
+            <div>
+                <span class="text-3xl font-bold tracking-tighter">Join</span>
+                <span class="text-3xl font-bold tracking-tighter gold-text">Gold</span>
+                <span class="text-3xl font-bold tracking-tighter">.Football</span>
             </div>
         </div>
-    </nav>
-
-    <!-- HERO + остальные секции (сокращённо для экономии места, но полный дизайн как раньше) -->
-    <header class="hero-bg h-screen flex items-center relative">
-        <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
-            <h1 class="text-6xl md:text-7xl font-bold leading-none mb-6 tracking-tighter">СОЗДАЙТЕ СВОЙ<br>ФУТБОЛЬНЫЙ САЙТ<br><span class="gold-text">ЗА 5 МИНУТ</span></h1>
-            <p class="max-w-xl mx-auto text-xl text-zinc-300 mb-10">Полный функционал join.football + чёрно-золотой дизайн + вход по коду</p>
-            <button onclick="showCodeLoginModal()" class="bg-gradient-to-r from-amber-400 to-yellow-600 text-black font-bold text-xl px-12 py-6 rounded-3xl">Начать прямо сейчас</button>
-        </div>
-    </header>
-
-    <!-- Остальные секции (features, demo, tariffs) — точно как в первой версии, можешь скопировать из моего первого сообщения если нужно, но они здесь тоже работают -->
-
-    <!-- МОДАЛКА ВХОДА ПО КОДУ -->
-    <div id="code-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[999]">
-        <div class="bg-zinc-900 w-full max-w-md mx-4 rounded-3xl p-8">
-            <h3 class="text-2xl font-bold mb-6 text-center gold-text">Вход через Telegram по коду</h3>
-            
-            <div id="step-phone">
-                <input id="phone-input" type="tel" placeholder="+7 999 123-45-67 или @username" class="w-full bg-black border border-amber-400 rounded-2xl px-6 py-5 text-lg outline-none">
-                <button onclick="sendCode()" class="mt-6 w-full py-5 bg-amber-400 text-black font-bold rounded-2xl">Отправить код</button>
-            </div>
-            
-            <div id="step-code" class="hidden">
-                <input id="code-input" type="text" maxlength="6" placeholder="123456" class="w-full bg-black border border-amber-400 rounded-2xl px-6 py-5 text-4xl text-center tracking-widest outline-none">
-                <button onclick="verifyCode()" class="mt-6 w-full py-5 bg-emerald-400 text-black font-bold rounded-2xl">Подтвердить код</button>
-            </div>
+        <div class="flex items-center gap-4">
+            <button onclick="showCodeModal()" 
+                    class="flex items-center gap-3 bg-gradient-to-r from-amber-400 to-yellow-600 text-black font-bold text-xl px-10 py-6 rounded-3xl hover:scale-105 transition-all">
+                <i class="fa-solid fa-key"></i> Войти через Telegram по коду
+            </button>
+            <button onclick="showVIP()" 
+                    class="w-9 h-9 flex items-center justify-center text-3xl text-amber-400 hover:text-yellow-300">👑</button>
         </div>
     </div>
+</nav>
 
-    <!-- VIP АДМИНКА (полная) -->
-    <div id="vip-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[999]">
-        <!-- (полный код модалки из первого сообщения — оставил точно такой же) -->
-        <!-- ... (скопировал полностью из моего первого ответа) ... -->
+<!-- HERO -->
+<header class="hero-bg h-screen flex items-center relative">
+    <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+        <div class="inline-flex bg-black/70 px-6 py-2 rounded-3xl mb-6 border border-amber-400/30">
+            <span class="text-sm uppercase tracking-widest font-medium text-amber-400">ПРЕМИУМ 2026</span>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-bold leading-none mb-6 tracking-tighter">
+            СОЗДАЙТЕ СВОЙ<br>ФУТБОЛЬНЫЙ САЙТ<br><span class="gold-text">ЗА 5 МИНУТ</span>
+        </h1>
+        <p class="max-w-xl mx-auto text-xl text-zinc-300 mb-10">
+            Полный функционал join.football • Чёрно-золотой дизайн • Вход по коду без бота
+        </p>
+        <button onclick="showCodeModal()" 
+                class="bg-gradient-to-r from-amber-400 to-yellow-600 text-black font-bold text-2xl px-16 py-7 rounded-3xl hover:scale-110 transition-all">
+            НАЧАТЬ СЕЙЧАС
+        </button>
     </div>
+</header>
 
-    <script>
-        // === ВЕСЬ JS (main.js внутри) ===
-        async function sha256(message) {
-            const msgUint8 = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-        const CORRECT_HASH = "9b871512327c09ce91dd649b3f96a63b7408ef267c8cc5710114e629730cb61f";
+<!-- МОДАЛКА ВХОДА ПО КОДУ -->
+<div id="code-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[999] modal">
+    <div class="bg-zinc-900 max-w-md w-full mx-4 rounded-3xl p-8">
+        <h3 class="text-3xl font-bold text-center mb-8 gold-text">Вход по коду</h3>
+        
+        <div id="phone-step">
+            <input id="phone" type="text" placeholder="+7 999 123-45-67 или @username" 
+                   class="w-full px-6 py-5 bg-black border border-amber-400 rounded-2xl text-lg outline-none">
+            <button onclick="sendFakeCode()" 
+                    class="mt-6 w-full py-6 bg-amber-400 text-black font-bold rounded-2xl text-lg">Отправить код в Telegram</button>
+        </div>
+        
+        <div id="code-step" class="hidden">
+            <div class="text-center mb-4 text-emerald-400 font-medium">Код отправлен!</div>
+            <input id="code" type="text" maxlength="6" placeholder="123456" 
+                   class="w-full text-center text-5xl tracking-[8px] bg-black border border-emerald-400 rounded-2xl py-6 outline-none">
+            <button onclick="verifyFakeCode()" 
+                    class="mt-6 w-full py-6 bg-emerald-400 text-black font-bold rounded-2xl text-lg">Подтвердить код</button>
+        </div>
+    </div>
+</div>
 
-        let visitors = [];
-        let currentPhone = '';
+<!-- VIP АДМИН-ПАНЕЛЬ -->
+<div id="vip-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-[999] modal">
+    <div class="bg-zinc-900 max-w-4xl w-full mx-4 rounded-3xl overflow-hidden">
+        <div class="bg-black p-6 flex justify-between items-center border-b border-amber-900">
+            <div class="flex items-center gap-3 text-2xl font-bold"><span>👑</span> VIP АДМИН-ПАНЕЛЬ</div>
+            <button onclick="closeVIP()" class="text-4xl text-zinc-400 hover:text-white">✕</button>
+        </div>
+        <div class="p-8">
+            <h3 class="flex items-center gap-2 text-xl mb-6"><i class="fa-solid fa-users"></i> Все пользователи сайта</h3>
+            <table id="visitors-table" class="w-full text-sm">
+                <thead class="bg-zinc-950 text-amber-400">
+                    <tr><th class="text-left py-4 px-4">Имя</th><th class="text-left py-4 px-4">Время входа</th><th class="text-left py-4 px-4">Telegram</th></tr>
+                </thead>
+                <tbody id="visitors-body" class="text-zinc-300"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-        async function showVIPPrompt() {
-            const pass = prompt("Введите VIP-пароль:");
-            if (await sha256(pass) === CORRECT_HASH) {
-                document.getElementById('vip-modal').classList.remove('hidden');
-                loadVisitors();
-            } else alert("Неверный пароль");
-        }
+<script>
+// === ВЕСЬ JS ===
+const CORRECT_HASH = "9b871512327c09ce91dd649b3f96a63b7408ef267c8cc5710114e629730cb61f";
+let visitors = JSON.parse(localStorage.getItem('visitors')) || [];
 
-        async function loadVisitors() {
-            const res = await fetch('/api/visitors');
-            visitors = await res.json();
-            // рендер таблицы (код из первого сообщения)
-            console.log('Visitors loaded:', visitors);
-        }
+async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
 
-        function showCodeLoginModal() {
-            document.getElementById('code-modal').classList.remove('hidden');
-            document.getElementById('step-phone').classList.remove('hidden');
-            document.getElementById('step-code').classList.add('hidden');
-        }
+async function showVIP() {
+    const pass = prompt("Введите VIP-пароль (222):");
+    if (await sha256(pass) === CORRECT_HASH) {
+        document.getElementById('vip-modal').classList.remove('hidden');
+        renderVisitors();
+    } else {
+        alert("❌ Неверный пароль");
+    }
+}
 
-        async function sendCode() {
-            const phone = document.getElementById('phone-input').value.trim();
-            if (!phone) return alert('Введите телефон');
-            currentPhone = phone;
-            const res = await fetch('/api/send-code', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({phone}) });
-            if (res.ok) {
-                document.getElementById('step-phone').classList.add('hidden');
-                document.getElementById('step-code').classList.remove('hidden');
-            }
-        }
+function closeVIP() {
+    document.getElementById('vip-modal').classList.add('hidden');
+}
 
-        async function verifyCode() {
-            const code = document.getElementById('code-input').value.trim();
-            const name = prompt('Как вас зовут?', 'Игрок');
-            const res = await fetch('/api/verify-code', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({phone: currentPhone, code, name})
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert(`✅ Добро пожаловать, ${data.user.name}!`);
-                document.getElementById('code-modal').classList.add('hidden');
-            } else alert('❌ Неверный код');
-        }
+function renderVisitors() {
+    const tbody = document.getElementById('visitors-body');
+    tbody.innerHTML = visitors.map(v => `
+        <tr class="border-b border-zinc-800 hover:bg-zinc-800">
+            <td class="py-4 px-4">${v.name}</td>
+            <td class="py-4 px-4">${v.time}</td>
+            <td class="py-4 px-4">${v.username}</td>
+        </tr>
+    `).join('');
+}
 
-        // Запуск
-        window.onload = () => {
-            console.log('%cJoinGold.Football готов! Вход по коду без бота ✅', 'color:#d4af37');
+function showCodeModal() {
+    document.getElementById('code-modal').classList.remove('hidden');
+    document.getElementById('phone-step').classList.remove('hidden');
+    document.getElementById('code-step').classList.add('hidden');
+}
+
+function sendFakeCode() {
+    const phone = document.getElementById('phone').value.trim() || "+7 999 123-45-67";
+    const code = Math.floor(100000 + Math.random() * 900000);
+    
+    alert(`✅ КОД ОТПРАВЛЕН В TELEGRAM!\n\nВаш код: ${code}\n\n(в реальной версии придёт в Telegram)`);
+    
+    window.currentCode = code.toString();
+    window.currentPhone = phone;
+    
+    document.getElementById('phone-step').classList.add('hidden');
+    document.getElementById('code-step').classList.remove('hidden');
+}
+
+function verifyFakeCode() {
+    const entered = document.getElementById('code').value.trim();
+    if (entered === window.currentCode) {
+        const name = prompt("Как вас зовут?", "Игрок") || "Игрок";
+        const user = {
+            name: name,
+            time: new Date().toLocaleString('ru-RU'),
+            username: `@${window.currentPhone.replace(/[^a-zA-Z0-9]/g, '')}`
         };
-    </script>
+        visitors.unshift(user);
+        localStorage.setItem('visitors', JSON.stringify(visitors));
+        
+        alert(`✅ Добро пожаловать, ${name}!`);
+        document.getElementById('code-modal').classList.add('hidden');
+        if (!document.getElementById('vip-modal').classList.contains('hidden')) renderVisitors();
+    } else {
+        alert("❌ Неверный код");
+    }
+}
+
+window.onload = () => {
+    console.log('%c✅ JoinGold.Football СТАТИЧЕСКАЯ ВЕРСИЯ загружена', 'color:#d4af37; font-size:14px');
+};
+</script>
 </body>
 </html>
